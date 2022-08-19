@@ -16,103 +16,144 @@
       <div class="card-body">
         <h2 style="text-align: center">EDIT DATA</h2>
         <hr>
-        <form onsubmit="return saveData(event)">
-          <!-- <div class="row mb-3">
-            <label for="name" class="col-sm-2 col-form-label">Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="name" name="name">
+        <div class="card-body">
+          <form onsubmit="return saveData(event)">
+            <div class="row mb-3">
+              <label for="id" class="col-sm-2 col-form-label">ID</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="id" name="id" placeholder="id" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="string" class="col-sm-2 col-form-label">String</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="string" name="string" placeholder="String" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="integer" class="col-sm-2 col-form-label">Integer</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="integer" name="integer" placeholder="Integer" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="float" class="col-sm-2 col-form-label">Float</label>
+              <div class="col-sm-10">
+                <input type="number" step="0.0005" class="form-control" id="float" name="float" placeholder="Float"
+                  required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="date" class="col-sm-2 col-form-label">Date</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="date" name="date" placeholder="yyyy/mm/dd">
+              </div>
+            </div>
+
+            <fieldset class="row mb-3">
+              <label class="col-form-label col-sm-2 pt-0" for="boolean">Boolean</label>
+              <div class="col-sm-10">
+                <select class="form-select" id="boolean" name="boolean">
+                  <option selected>Choose...</option>
+                  <option value="true">true</option>
+                  <option value="false">false</option>
+                </select>
+            </fieldset>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+      <!-- <form onsubmit="return saveData(event)">
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <input type="checkbox" name="_idFilters" id="filters">
+              <label for="_id" class="col-sm-2 col-form-label">
+                ID</label>
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="_id" name="_id" placeholder="ID" value="">
             </div>
           </div>
           <div class="row mb-3">
-            <label for="address" class="col-sm-2 col-form-label">Address</label>
-            <div class="col-sm-10">
-              <textarea name="address" id="address" cols="30" rows="3" class="form-control"></textarea>
+            <div class="col-sm-3">
+              <input type="checkbox" name="stringFilters" id="filters">
+              <label for="string" class="col-sm-2 col-form-label">
+                String</label>
             </div>
-          </div> -->
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="string" name="string" placeholder="String" value="">
+            </div>
+          </div>
+
           <div class="row mb-3">
             <div class="col-sm-3">
-                <input type="checkbox" name="stringFilters" id="filters" >
-                    <label for="string" class="col-sm-2 col-form-label">
-                    String</label>
+              <input type="checkbox" name="integerFilters" id="filters">
+              <label for="integer" class="col-sm-3 col-form-label">Integer</label>
             </div>
             <div class="col-sm-9">
-                <input type="text" class="form-control" id="string" name="string" placeholder="String"
-                    value="">
+              <input type="number" class="form-control" id="integer" name="integer" placeholder="integer" value="">
             </div>
-        </div>
+          </div>
 
-        <div class="row mb-3">
+          <div class="row mb-3">
             <div class="col-sm-3">
-                <input type="checkbox" name="integerFilters" id="filters">
-                <label for="integer" class="col-sm-3 col-form-label">Integer</label>
+              <input type="checkbox" name="floatFilters" id="float">
+              <label for="float" class="col-sm-3 col-form-label">Float</label>
             </div>
             <div class="col-sm-9">
-                <input type="number" class="form-control" id="integer" name="integer"
-                    placeholder="integer" value="">
+              <input type="number" step="0.0005" class="form-control" id="float" name="float" placeholder="Float">
             </div>
-        </div>
+          </div>
 
-        <div class="row mb-3">
+          <div class="row mb-3">
             <div class="col-sm-3">
-                <input type="checkbox" name="floatFilters" id="float">
-                <label for="float" class="col-sm-3 col-form-label">Float</label>
+              <input type="checkbox" name="dateFilters" id="date">
+              <label for="date" class="col-sm-3 col-form-label">date</label>
             </div>
             <div class="col-sm-9">
-                <input type="number" step="0.0005" class="form-control" id="float" name="float"
-                    placeholder="Float" value="<%= query.float %>">
+              <input type="date" class="form-control" name="startDate" id="filter" placeholder="yyyy/mm/dd">
+              <p style="padding-top:7px;">to</p>
+              <input type="date" class="form-control" name="toDate" id="filter" placeholder="yyyy/mm/dd">
             </div>
-        </div>
+          </div>
 
-        <div class="row mb-3">
+          <fieldset class="row mb-3">
             <div class="col-sm-3">
-                <input type="checkbox" name="dateFilters" id="date" <%=query.dateFilters=='on'
-                    ? 'checked' : '' %>><label for="date" class="col-sm-3 col-form-label">date</label>
+              <input type="checkbox" name="booleanFilters" id="boolean">
+              <label class="col-form-label col-sm-3 pt-0" for="boolean">Boolean</label>
             </div>
             <div class="col-sm-9">
-                <input type="date" class="form-control" name="startDate" id="filter"
-                    placeholder="yyyy/mm/dd" value="<%= query.startDate %>">
-                <p style="padding-top:7px;">to</p>
-                <input type="date" class="form-control" name="toDate" id="filter"
-                    placeholder="yyyy/mm/dd" value="<%= query.toDate %>">
-            </div>
-        </div>
-
-        <fieldset class="row mb-3">
-            <div class="col-sm-3">
-                <input type="checkbox" name="booleanFilters" id="boolean" <%=query.booleanFilters=='on'
-                    ? 'checked' : '' %>><label class="col-form-label col-sm-3 pt-0"
-                    for="boolean">Boolean</label>
-            </div>
-            <div class="col-sm-9">
-                <select class="form-select" id="boolean" name="boolean">
-                    <option value="null" selected>Choose...</option>
-                    <option value="true" <%=query.boolean=='true' ? 'selected' : '' %>>true</option>
-                    <option value="false" <%=query.boolean=='false' ? 'selected' : '' %>>false</option>
-                </select>
-        </fieldset>
+              <select class="form-select" id="boolean" name="boolean">
+                <option value="null" selected>Choose...</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+          </fieldset>
           <button type="submit" class="btn btn-primary">Save</button>
-        </form>
-      </div>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>STRING</th>
-            <th>INTEGER</th>
-            <th>FLOAT</th>
-            <th>DATE</th>
-            <th>BOOLEAN</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody id="body-users">
-
-        </tbody>
-      </table>
-      <div class="card-footer">
-
-      </div>
+        </form> -->
     </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>STRING</th>
+          <th>INTEGER</th>
+          <th>FLOAT</th>
+          <th>DATE</th>
+          <th>BOOLEAN</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="body-users">
+
+      </tbody>
+    </table>
+    <div class="card-footer">
+
+    </div>
+  </div>
   </div>
 
   <script>
@@ -144,8 +185,12 @@
 
     const saveData = (e) => {
       e.preventDefault()
-      const name = document.getElementById('name').value
-      const address = document.getElementById('address').value
+      const id = document.getElementById('id').value
+      const string = document.getElementById('string').value
+      const integer = document.getElementById('integer').value
+      const float = document.getElementById('float').value
+      const date = document.getElementById('date').value
+      const boolean = document.getElementById('boolean').value
 
       if (idEdit == null) {
         fetch('http://localhost:3000/users', {
@@ -153,7 +198,7 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ name, address })
+          body: JSON.stringify({ id, string, integer, float, date, boolean })
         }).then((response) => response.json()).then((data) => {
           readData()
         })
@@ -163,14 +208,18 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ name, address })
+          body: JSON.stringify({ id, string, integer, float, date, boolean })
         }).then((response) => response.json()).then((data) => {
           readData()
         })
         idEdit = null;
       }
-      document.getElementById('name').value = ''
-      document.getElementById('address').value = ''
+      document.getElementById('id').value = ''
+      document.getElementById('string').value = ''
+      document.getElementById('integer').value = ''
+      document.getElementById('float').value = ''
+      document.getElementById('date').value = ''
+      document.getElementById('boolean').value = ''
       return false
     }
 
@@ -187,8 +236,13 @@
 
     const editData = (user) => {
       idEdit = user._id
-      document.getElementById('name').value = user.name
-      document.getElementById('address').value = user.address
+      document.getElementById('id').value = user.id
+      document.getElementById('string').value = user.string
+      document.getElementById('integer').value = user.integer
+      document.getElementById('float').value = user.float
+      document.getElementById('date').value = user.date
+      document.getElementById('boolean').value = user.boolean
+
     }
 
     readData()

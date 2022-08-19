@@ -5,18 +5,91 @@ const { ObjectId } = require('mongodb');
 module.exports = function (db) {
   const collection = db.collection('breads');
 
-  router.get('/', async function (req, res, next) {
+  // router.get('/', async function (req, res, next) {
+  //   try {
+  //     const findResult = await collection.find({}).toArray();
+  //     res.status(200).json(findResult)
+  //   } catch (e) {
+  //     res.json(e)
+  //   }
+  // });
+
+   router.get('/', async function (req, res, next) {
+    const page = req.query.page || 1
+    const previous = (parseInt(page) - 1) == 0 ? 1 : (parseInt(page) - 1)
+    const nextPage = parseInt(page) + 1
+    const limit = 5
+    const offset = parseInt((page - 1) * limit)
+    // const url = req.url == '/' ? '/?page=1' : req.url
+    // var sortBy = req.query.sortBy == undefined ? "_id" : req.query.sortBy
+    // var order = req.query.order == undefined ? 1 : req.query.order
+
+    // var paramsSort = `{
+    //   "${sortBy}" : ${order}
+    // }`
+    // paramsSort = JSON.parse(paramsSort)
+
+
+    // if (req.query.string && req.query.stringFilters == 'on') {
+    //   var paramsString = {
+    //     string:{'$regex' : req.query.string, '$options' : 'i'}
+    //     }
+    // }
+    // if (req.query.integer && req.query.integerFilters == 'on') {
+    //   var paramsInteger = {
+    //     integer: {'$regex' : req.query.integer, '$options' : 'i'}
+    //   }
+    // }
+    // if (req.query.float && req.query.floatFilters == 'on') {
+    //   var paramsFloat = {
+    //     float: {'$regex' : req.query.float, '$options' : 'i'}
+    //   }
+    // }
+    // if (req.query.dateFilters == 'on') {
+    //   if (req.query.startDate != '' && req.query.toDate != '') {
+    //     var paramsDate = {
+    //     date: {$gte: new Date(req.query.startDate), $lte: new Date(req.query.toDate)}
+    //     }
+        
+    //   } else if (req.query.startDate) {
+    //     var paramsStartDate = {
+    //       date : {$gte: new Date(req.query.startDate)}
+    //     }
+    //   } else {
+    //     var paramsToDate = {
+    //       date : {$lte: new Date(req.query.toDate)}
+    //     }
+    //   }
+    // }
+    // if (req.query.boolean && req.query.booleanFilters == 'on') {
+    //   var paramsBoolean = {
+    //     boolean: req.query.boolean
+    //   }
+    //   }
     try {
-      const findResult = await collection.find({}).toArray();
-      res.status(200).json(findResult)
+      // const finalParams = {...paramsString, ...paramsInteger, ...paramsFloat, ...paramsDate, ...paramsStartDate, ...paramsToDate, ...paramsBoolean}
+      const finalParams = {}
+      const findResult = await collection.find(finalParams).toArray()
+      const pages = Math.ceil(findResult.length / limit)
+      const lastResult = await collection.find(finalParams).collation({ locale: "en" }).skip(offset).limit(limit)/*.sort(paramsSort)*/.toArray()
+      console.log('result parameter',lastResult)
+      // const testResult = await collection.find({}).toArray()
+      res.status(200).json(lastResult)
     } catch (e) {
       res.json(e)
     }
-  });
+  })
 
   router.post('/', async function (req, res, next) {
     try {
-      const insertResult = await collection.insertOne({ name: req.body.name, address: req.body.address });
+      const insertResult = await collection.insertOne(   {
+          id: req.body.id,
+          string: req.body.string,
+          integer: req.body.integer,
+          float: req.body.float,
+          date: new Date(req.body.date),
+          boolean: req.body.boolean
+        });
       res.status(201).json(insertResult)
     } catch (e) {
       res.json(e)
