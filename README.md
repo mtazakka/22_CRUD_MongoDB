@@ -3,3 +3,4 @@
 16 Agustus Review ORM/ODM
 17 agustus tidur,
 18 Agustus, React JS and Redux
+19 Agustus, Vanilla CH 22
