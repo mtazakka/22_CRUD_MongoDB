@@ -4,3 +4,4 @@
 17 agustus tidur,
 18 Agustus, React JS and Redux
 19 Agustus, Vanilla CH 22
+21 Aug, Search % JQUERY
