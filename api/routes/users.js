@@ -14,12 +14,12 @@ module.exports = function (db) {
   //   }
   // });
 
-   router.get('/', async function (req, res, next) {
-    const page = req.query.page || 1
-    const previous = (parseInt(page) - 1) == 0 ? 1 : (parseInt(page) - 1)
-    const nextPage = parseInt(page) + 1
-    const limit = 5
-    const offset = parseInt((page - 1) * limit)
+  router.get('/', async function (req, res, next) {
+    // const page = req.query.page || 1
+    // const previous = (parseInt(page) - 1) == 0 ? 1 : (parseInt(page) - 1)
+    // const nextPage = parseInt(page) + 1
+    // const limit = 5
+    // const offset = parseInt((page - 1) * limit)
     // const url = req.url == '/' ? '/?page=1' : req.url
     // var sortBy = req.query.sortBy == undefined ? "_id" : req.query.sortBy
     // var order = req.query.order == undefined ? 1 : req.query.order
@@ -50,7 +50,7 @@ module.exports = function (db) {
     //     var paramsDate = {
     //     date: {$gte: new Date(req.query.startDate), $lte: new Date(req.query.toDate)}
     //     }
-        
+
     //   } else if (req.query.startDate) {
     //     var paramsStartDate = {
     //       date : {$gte: new Date(req.query.startDate)}
@@ -70,11 +70,11 @@ module.exports = function (db) {
       // const finalParams = {...paramsString, ...paramsInteger, ...paramsFloat, ...paramsDate, ...paramsStartDate, ...paramsToDate, ...paramsBoolean}
       const finalParams = {}
       const findResult = await collection.find(finalParams).toArray()
-      const pages = Math.ceil(findResult.length / limit)
-      const lastResult = await collection.find(finalParams).collation({ locale: "en" }).skip(offset).limit(limit)/*.sort(paramsSort)*/.toArray()
-      console.log('result parameter',lastResult)
+      // const pages = Math.ceil(findResult.length / limit)
+      // const lastResult = await collection.find(finalParams).collation({ locale: "en" }).skip(offset).limit(limit)/*.sort(paramsSort)*/.toArray()
+      // console.log('result parameter',lastResult)
       // const testResult = await collection.find({}).toArray()
-      res.status(200).json(lastResult)
+      res.status(200).json(findResult)
     } catch (e) {
       res.json(e)
     }
@@ -82,14 +82,14 @@ module.exports = function (db) {
 
   router.post('/', async function (req, res, next) {
     try {
-      const insertResult = await collection.insertOne(   {
-          id: req.body.id,
-          string: req.body.string,
-          integer: req.body.integer,
-          float: req.body.float,
-          date: new Date(req.body.date),
-          boolean: req.body.boolean
-        });
+      const insertResult = await collection.insertOne({
+        id: req.body.id,
+        string: req.body.string,
+        integer: req.body.integer,
+        float: req.body.float,
+        date: new Date(req.body.date),
+        boolean: req.body.boolean
+      });
       res.status(201).json(insertResult)
     } catch (e) {
       res.json(e)
@@ -98,7 +98,8 @@ module.exports = function (db) {
 
   router.put('/:id', async function (req, res, next) {
     try {
-      const updateResult = await collection.updateOne({ _id: ObjectId(req.params.id) }, { $set: 
+      const updateResult = await collection.updateOne({ _id: ObjectId(req.params.id) }, {
+        $set:
         {
           id: req.body.id,
           string: req.body.string,

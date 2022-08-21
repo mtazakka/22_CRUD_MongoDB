@@ -83,51 +83,51 @@
                         <tr>
                             <th>
                                 <a href="/?page=1<%= sortBy == '_id' && order == '1' ? '&sortBy=_id&order=-1' : '&sortBy=_id&order=1' %>"
-                                    style="text-decoration:none; color: black;"
-                                    <% if(sortBy == '_id' && order == '1' ){ %> <i class="fa-solid fa-sort-up"></i
-                                    <% } else if (sortBy == '_id' && order == '-1' ){ %> <i class="fa-solid fa-sort-down"></i
-                                    <% } else { %> <i class="fa-solid fa-sort"></i <% } %>
-                                        > ID</a>
+                                    style="text-decoration:none; color: black;" <% if(sortBy=='_id' && order=='1' ){ %>
+                                    <i class="fa-solid fa-sort-up"></i <% } else if (sortBy=='_id' && order=='-1' ){ %>
+                                    <i class="fa-solid fa-sort-down"></i <% } else { %> <i class="fa-solid fa-sort"></i
+                                        <% } %>
+                                    > ID</a>
                             </th>
                             <th>
                                 <a href="/?page=1<%= sortBy == 'string' && order == '1' ? '&sortBy=string&order=-1' : '&sortBy=string&order=1' %>"
-                                    style="text-decoration:none; color: black;"
-                                    <% if(sortBy == 'string' && order == '1' ){ %> <i class="fa-solid fa-sort-up"></i
-                                    <% } else if (sortBy == 'string' && order == '-1' ){ %> <i class="fa-solid fa-sort-down"></i
-                                    <% } else { %> <i class="fa-solid fa-sort"></i <% } %>
-                                        > String</a>
+                                    style="text-decoration:none; color: black;" <% if(sortBy=='string' && order=='1' ){
+                                    %> <i class="fa-solid fa-sort-up"></i <% } else if (sortBy=='string' && order=='-1'
+                                        ){ %> <i class="fa-solid fa-sort-down"></i <% } else { %> <i
+                                        class="fa-solid fa-sort"></i <% } %>
+                                    > String</a>
                             </th>
                             <th>
                                 <a href="/?page=1<%= sortBy == 'integer' && order == '1' ? '&sortBy=integer&order=-1' : '&sortBy=integer&order=1' %>"
-                                    style="text-decoration:none; color: black;"
-                                    <% if(sortBy == 'integer' && order == '1' ){ %> <i class="fa-solid fa-sort-up"></i
-                                    <% } else if (sortBy == 'integer' && order == '-1' ){ %> <i class="fa-solid fa-sort-down"></i
-                                    <% } else { %> <i class="fa-solid fa-sort"></i <% } %>
-                                        > Integer</a>
+                                    style="text-decoration:none; color: black;" <% if(sortBy=='integer' && order=='1' ){
+                                    %> <i class="fa-solid fa-sort-up"></i <% } else if (sortBy=='integer' && order=='-1'
+                                        ){ %> <i class="fa-solid fa-sort-down"></i <% } else { %> <i
+                                        class="fa-solid fa-sort"></i <% } %>
+                                    > Integer</a>
                             </th>
                             <th>
                                 <a href="/?page=1<%= sortBy == 'float' && order == '1' ? '&sortBy=float&order=-1' : '&sortBy=float&order=1' %>"
-                                    style="text-decoration:none; color: black;"
-                                    <% if(sortBy == 'float' && order == '1' ){ %> <i class="fa-solid fa-sort-up"></i
-                                    <% } else if (sortBy == 'float' && order == '-1' ){ %> <i class="fa-solid fa-sort-down"></i
-                                    <% } else { %> <i class="fa-solid fa-sort"></i <% } %>
-                                        > Float</a>
+                                    style="text-decoration:none; color: black;" <% if(sortBy=='float' && order=='1' ){
+                                    %> <i class="fa-solid fa-sort-up"></i <% } else if (sortBy=='float' && order=='-1'
+                                        ){ %> <i class="fa-solid fa-sort-down"></i <% } else { %> <i
+                                        class="fa-solid fa-sort"></i <% } %>
+                                    > Float</a>
                             </th>
                             <th>
                                 <a href="/?page=1<%= sortBy == 'date' && order == '1' ? '&sortBy=date&order=-1' : '&sortBy=date&order=1' %>"
-                                    style="text-decoration:none; color: black;"
-                                    <% if(sortBy == 'date' && order == '1' ){ %> <i class="fa-solid fa-sort-up"></i
-                                    <% } else if (sortBy == 'date' && order == '-1' ){ %> <i class="fa-solid fa-sort-down"></i
-                                    <% } else { %> <i class="fa-solid fa-sort"></i <% } %>
-                                        > Date</a>
+                                    style="text-decoration:none; color: black;" <% if(sortBy=='date' && order=='1' ){ %>
+                                    <i class="fa-solid fa-sort-up"></i <% } else if (sortBy=='date' && order=='-1' ){ %>
+                                    <i class="fa-solid fa-sort-down"></i <% } else { %> <i class="fa-solid fa-sort"></i
+                                        <% } %>
+                                    > Date</a>
                             </th>
                             <th>
                                 <a href="/?page=1<%= sortBy == 'boolean' && order == '1' ? '&sortBy=boolean&order=-1' : '&sortBy=boolean&order=1' %>"
-                                    style="text-decoration:none; color: black;"
-                                    <% if(sortBy == 'boolean' && order == '1' ){ %> <i class="fa-solid fa-sort-up"></i
-                                    <% } else if (sortBy == 'boolean' && order == '-1' ){ %> <i class="fa-solid fa-sort-down"></i
-                                    <% } else { %> <i class="fa-solid fa-sort"></i <% } %>
-                                        > Boolean</a>
+                                    style="text-decoration:none; color: black;" <% if(sortBy=='boolean' && order=='1' ){
+                                    %> <i class="fa-solid fa-sort-up"></i <% } else if (sortBy=='boolean' && order=='-1'
+                                        ){ %> <i class="fa-solid fa-sort-down"></i <% } else { %> <i
+                                        class="fa-solid fa-sort"></i <% } %>
+                                    > Boolean</a>
                             </th>
                             <th>Action</th>
                         </tr>

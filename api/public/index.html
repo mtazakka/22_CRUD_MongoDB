@@ -65,7 +65,10 @@
         <button type="submit" class="btn btn-primary">Save</button>
         </form>
       </div>
-      <!-- <form onsubmit="return saveData(event)">
+      <hr>
+      <div class="card-body">
+        <h2>Search Data</h2>
+        <form onsubmit="return saveData(event)">
           <div class="row mb-3">
             <div class="col-sm-3">
               <input type="checkbox" name="_idFilters" id="filters">
@@ -132,17 +135,18 @@
               </select>
           </fieldset>
           <button type="submit" class="btn btn-primary">Save</button>
-        </form> -->
+        </form>
+      </div>
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped" id="myTable">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>STRING</th>
-          <th>INTEGER</th>
-          <th>FLOAT</th>
-          <th>DATE</th>
-          <th>BOOLEAN</th>
+          <th onclick="sortNumber(0)">ID</th>
+          <th onclick="sortTable(1)">STRING</th>
+          <th onclick="sortNumber(2)">INTEGER</th>
+          <th onclick="sortNumber(3)">FLOAT</th>
+          <th onclick="sortTable(4)">DATE</th>
+          <th onclick="sortTable(5)">BOOLEAN</th>
           <th>ACTION</th>
         </tr>
       </thead>
@@ -151,19 +155,70 @@
       </tbody>
     </table>
     <div class="card-footer">
-
+      <nav>
+        <ul class="pagination">
+          <li class="page-item">
+            <button class="page-link mx-2" id='prevButton'>Previous</button>
+          </li>
+          <li class="page-item">
+            <button class="page-link mx-2" id='nextButton'>Next</button>
+          </li>
+        </ul>
+      </nav>
+      <!-- <nav aria-label="Page navigation" class="pagination justify-content-center">
+        <ul class="pagination pagination-sm">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="First">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&lt;</span>
+            </a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">...</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&gt;</span>
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Last">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav> -->
+      <!-- <a href="<%= url.replace(`page=${page}`,`page=${previous}`) %>">Previous</a>
+          <a class="<%= i == page ? 'active' : ''%>" href="<%= url.replace(`page=${page}`,`page=${i}`) %>">
+          </a>
+            <a href="<%= url.replace(`page=${page}`,`page=${next <= pages ? next : page}`) %>">Next</a> -->
     </div>
   </div>
   </div>
 
   <script>
     let idEdit = null;
+    let pageSize = 10
+    let currentPage = 1
+    var data = []
+
+
     const readData = () => {
       fetch('http://localhost:3000/users')
         .then((response) => response.json())
         .then((data) => {
           let html = ''
-          data.forEach((item, index) => {
+          data.filter((row, index) => {
+            let start = (currentPage - 1) * pageSize
+            let end = currentPage * pageSize
+
+            if (index >= start && index < end) return true;
+          }).forEach(item => {
             html += `
             <tr>
               <td>${item.id}</td>
@@ -179,12 +234,100 @@
             </tr>
             `
           })
+
           document.getElementById('body-users').innerHTML = html
+
+          function previousPage() {
+            if (currentPage > 1)
+              currentPage--;
+            readData()
+          }
+          function nextPage() {
+            if ((currentPage * pageSize) < data.length)
+              currentPage++;
+            readData()
+          }
+
+          document.querySelector('#prevButton').addEventListener('click', previousPage, false)
+          document.querySelector('#nextButton').addEventListener('click', nextPage, false)
+
         });
     }
-
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("myTable");
+      switching = true;
+      dir = "asc";
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+    function sortNumber(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("myTable");
+      switching = true;
+      dir = "asc";
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir == "asc") {
+            if (Number(x.innerHTML) > Number(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (Number(x.innerHTML) < Number(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
     const saveData = (e) => {
       e.preventDefault()
+      document.getElementById('id').value
       const id = document.getElementById('id').value
       const string = document.getElementById('string').value
       const integer = document.getElementById('integer').value
