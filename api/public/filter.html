@@ -1,0 +1,379 @@
+<html>
+
+<head>
+  <title>Challange 22 - JQUERY</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header" style="text-align: center;">
+        <h1>BREAD(Browse, Read, Edit, Add, Delete)</h1>
+      </div>
+      <div class="card-body">
+        <h2 style="text-align:center; ">Search Data</h2>
+        <form id="form-filters">
+          <div class="row mb-3">
+            <label for="stringFilters" class="col-sm-2 col-form-label">
+              NAMA</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="stringFilters" name="stringFilters" placeholder="String"
+                value="">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="integerFilters" class="col-sm-2 col-form-label">USIA</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="integerFilters" name="integerFilters" placeholder="integer"
+                value="">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="floatFilters" class="col-sm-2 col-form-label">TINGGI</label>
+            <div class="col-sm-10">
+              <input type="number" step="0.0005" class="form-control" id="floatFilters" name="floatFilters"
+                placeholder="Float">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="dateFilters" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+            <div class="col-sm-10">
+              <input type="date" class="form-control" name="startDate" id="dateFilters" placeholder="yyyy/mm/dd">
+              <p style="padding-top:7px;">to</p>
+              <input type="date" class="form-control" name="toDate" id="dateFilters" placeholder="yyyy/mm/dd">
+            </div>
+          </div>
+
+          <fieldset class="row mb-3">
+            <label class="col-form-label col-sm-2 pt-0" for="booleanFilters">SUDAH LULUS</label>
+            <div class="col-sm-10">
+              <select class="form-select" id="booleanFilters" name="booleanFilters">
+                <option value="null" selected>Choose...</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+          </fieldset>
+          <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+      </div>
+      <div class="card-body">
+        <h2 style="text-align: center">EDIT DATA</h2>
+        <hr>
+        <div class="card-body">
+          <form onsubmit="return saveData(event)" id="form-user">
+            <div class="row mb-3">
+              <label for="id" class="col-sm-2 col-form-label">ID</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="id" name="id" placeholder="id" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="string" class="col-sm-2 col-form-label">NAMA</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="string" name="string" placeholder="String" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="integer" class="col-sm-2 col-form-label">USIA</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="integer" name="integer" placeholder="Integer" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="float" class="col-sm-2 col-form-label">TINGGI</label>
+              <div class="col-sm-10">
+                <input type="number" step="0.0005" class="form-control" id="float" name="float" placeholder="Float"
+                  required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <label for="date" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="date" name="date" placeholder="yyyy/mm/dd" required>
+              </div>
+            </div>
+
+            <fieldset class="row mb-3">
+              <label class="col-form-label col-sm-2 pt-0" for="boolean">LULUS</label>
+              <div class="col-sm-10">
+                <select class="form-select" id="boolean" name="boolean" required>
+                  <option selected>Choose...</option>
+                  <option value="Sudah">Sudah</option>
+                  <option value="Belum">Belum</option>
+                </select>
+            </fieldset>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+      <hr>
+
+    </div>
+    <table class="table table-striped" id="myTable" style="text-align:center">
+      <thead>
+        <tr>
+          <th onclick="sortNumber(0)">ID</th>
+          <th onclick="sortTable(1)">NAMA</th>
+          <th onclick="sortNumber(2)">USIA</th>
+          <th onclick="sortNumber(3)">TINGGI</th>
+          <th onclick="sortTable(4)">TANGGAL LAHIR</th>
+          <th onclick="sortTable(5)">LULUS</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="body-users">
+
+      </tbody>
+    </table>
+    <div class="card-footer">
+      <nav>
+        <ul class="pagination">
+          <li class="page-item">
+            <button class="page-link mx-2" id='prevButton'>Previous</button>
+          </li>
+          <li class="page-item">
+            <button class="page-link mx-2" id='nextButton'>Next</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    let idEdit = null;
+    let pageSize = 10
+    let currentPage = 1
+    var data = []
+
+
+    const readData = (params) => {
+      $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/users",
+        dataType: "json",
+        data: params
+      }).done(function (data) {
+        // .then((response) => response.json())
+        // .then((data) => {
+        let html = ''
+        data.filter((row, index) => {
+          let start = (currentPage - 1) * pageSize
+          let end = currentPage * pageSize
+
+          if (index >= start && index < end) return true;
+        }).forEach((item, index) => {
+          html += `
+            <tr>
+              <td>${item.id}</td>
+              <td>${item.string}</td>
+              <td>${item.integer}</td>
+              <td>${item.float}</td>
+              <td>${item.date}</td>
+              <td>${item.boolean}</td>
+              <td>
+                <button type="button" class="btn btn-success btn-edit" iddata="${item._id}"> Edit </button>
+            < button type = "button" class="btn btn-danger" onclick = "removeData('${item._id}')" > Remove</button >
+              </td >
+            </tr >
+      `
+        })
+
+        $('#body-users').html(html)
+
+        function previousPage() {
+          if (currentPage > 1)
+            currentPage--;
+          readData()
+        }
+        function nextPage() {
+          if ((currentPage * pageSize) < data.length)
+            currentPage++;
+          readData()
+        }
+
+        document.querySelector('#prevButton').addEventListener('click', previousPage, false)
+        document.querySelector('#nextButton').addEventListener('click', nextPage, false)
+
+      }).fail(function (err) {
+        alert('Failed to read Jquery')
+      })
+    }
+
+
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("myTable");
+      switching = true;
+      dir = "asc";
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+    function sortNumber(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("myTable");
+      switching = true;
+      dir = "asc";
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          if (dir == "asc") {
+            if (Number(x.innerHTML) > Number(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "desc") {
+            if (Number(x.innerHTML) < Number(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+
+
+
+
+
+
+    const saveData = (id, string, integer, float, date, boolean) => {
+
+
+      if (idEdit == null) {
+        $.ajax({
+          method: "POST",
+          url: `http://localhost:3000/users`,
+          dataType: "json",
+          data: { id, string, integer, float, date, boolean }
+        }).done(function (data) {
+          readData()
+          $("#form-user").reset()
+
+        })
+      } else {
+        $.ajax({
+          method: "PUT",
+          url: `http://localhost:3000/users$/{idEdit}`,
+          dataType: "json",
+          data: { id, string, integer, float, date, boolean }
+        }).done(function (data) {
+          readData()
+          $("#form-user").reset()
+        })
+        idEdit = null;
+      }
+      // $('#id').val()
+      // $('#string').val()
+      // $('#integer').val()
+      // $('#float').val()
+      // $('#date').val()
+      // $('#boolean').val()
+      return false
+    }
+
+    const removeData = (id) => {
+      fetch(`http://localhost:3000/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then((response) => response.json()).then((data) => {
+        readData()
+      })
+    }
+
+    const editData = (user) => {
+      idEdit = user._id
+      document.getElementById('id').value = user.id
+      document.getElementById('string').value = user.string
+      document.getElementById('integer').value = user.integer
+      document.getElementById('float').value = user.float
+      document.getElementById('date').value = user.date
+      document.getElementById('boolean').value = user.boolean
+
+    }
+
+    $(document).ready(function () {
+      readData()
+
+      e.preventDefault()
+      $('#id').val()
+      const id = $('#id').val()
+      const string = $('#string').val()
+      const integer = $('#integer').val()
+      const float = $('#float').val()
+      const date = $('#date').val()
+      const boolean = $('#boolean').val()
+
+      $('#form-filters').submit(function (event) {
+        event.preventDefault()
+        const string = $('#stringFilters').val()
+        const integer = $('#integerFilters').val()
+        const float = $('#floatFilters').val()
+        const date = $('#dateFilters').val()
+        const boolean = $('#booleanFilters').val()
+        readData({ string, integer, float, date, boolean })
+      })
+
+    })
+
+
+
+  </script>
+
+
+</body>
+
+</html>

@@ -1,10 +1,11 @@
 <html>
 
 <head>
-  <title>Challange 22 - Vanilla</title>
+  <title>Challange 22 - JQUERY</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -42,17 +43,11 @@
           </div>
 
           <div class="row mb-3">
-            <label for="startDateFilters" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
+            <label for="dateFilters" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" name="startDate" id="startDateFilters" placeholder="yyyy/mm/dd">
+              <input type="date" class="form-control" name="startDate" id="dateFilters" placeholder="yyyy/mm/dd">
               <p style="padding-top:7px;">to</p>
-            </div>
-          </div>
-
-          <div class="row mb-3" style="margin-top: -20px ;">
-            <label for="toDateFilters" class="col-sm-2 col-form-label"></label>
-            <div class="col-sm-10">
-              <input type="date" class="form-control" name="toDate" id="toDateFilters" placeholder="yyyy/mm/dd">
+              <input type="date" class="form-control" name="toDate" id="dateFilters" placeholder="yyyy/mm/dd">
             </div>
           </div>
 
@@ -67,44 +62,44 @@
           </fieldset>
           <button type="submit" class="btn btn-primary">Filter</button>
           <button type="reset" class="btn btn-danger">Reset</button>
-          <button type="button" id="reset-form-search" onclick="readData()" class="btn btn-warning">Reset Table</button>
+          <button type="button" id="reset-form-search" class="btn btn-warning">Reset Table</button>
         </form>
       </div>
-    </div>
-    <table class="table table-striped" id="myTable" style="text-align:center">
-      <thead>
-        <tr>
-          <th onclick="sortNumber(0)">ID</th>
-          <th onclick="sortTable(1)">NAMA</th>
-          <th onclick="sortNumber(2)">USIA</th>
-          <th onclick="sortNumber(3)">TINGGI</th>
-          <th onclick="sortTable(4)">TANGGAL LAHIR</th>
-          <th onclick="sortTable(5)">LULUS</th>
-          <th>ACTION</th>
-        </tr>
-      </thead>
-      <tbody id="body-users">
 
-      </tbody>
-    </table>
-    <div class="card-footer">
-      <nav>
-        <ul class="pagination">
-          <li class="page-item">
-            <button class="page-link mx-2" id='prevButton'>Previous</button>
-          </li>
-          <li class="page-item">
-            <button class="page-link mx-2" id='nextButton'>Next</button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-    <div class="card-body">
       <hr>
-      <h2 style="text-align: center">EDIT DATA</h2>
+      <table class="table table-striped" id="myTable" style="text-align:center; vertical-align: middle;">
+        <thead>
+          <tr>
+            <th onclick="sortNumber(0)">ID</th>
+            <th onclick="sortTable(1)">NAMA</th>
+            <th onclick="sortNumber(2)">USIA</th>
+            <th onclick="sortNumber(3)">TINGGI</th>
+            <th onclick="sortTable(4)">TANGGAL LAHIR</th>
+            <th onclick="sortTable(5)">LULUS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="body-users">
+
+        </tbody>
+      </table>
+      <div class="card-footer">
+        <nav>
+          <ul class="pagination">
+            <li class="page-item">
+              <button class="page-link mx-2" id='prevButton'>Previous</button>
+            </li>
+            <li class="page-item">
+              <button class="page-link mx-2" id='nextButton'>Next</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
       <div class="card-body">
-        <form onsubmit="return saveData(event)">
+        <h2 style="text-align: center">EDIT DATA</h2>
+        <hr>
+        <form onsubmit="return saveData(event)" id="form-user">
           <div class="row mb-3">
             <label for="id" class="col-sm-2 col-form-label">ID</label>
             <div class="col-sm-10">
@@ -135,7 +130,7 @@
           <div class="row mb-3">
             <label for="date" class="col-sm-2 col-form-label">TANGGAL LAHIR</label>
             <div class="col-sm-10">
-              <input type="date" class="form-control" id="date" name="date" required>
+              <input type="date" class="form-control" id="date" name="date" placeholder="yyyy/mm/dd" required>
             </div>
           </div>
 
@@ -147,14 +142,14 @@
                 <option value="Sudah">Sudah</option>
                 <option value="Belum">Belum</option>
               </select>
+            </div>
           </fieldset>
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="reset" class="btn btn-danger">Reset</button>
+          <button type="button" id="reset-form-search" class="btn btn-warning">Reset Table</button>
+        </form>
       </div>
-      <button type="submit" class="btn btn-primary">Save</button>
-      <button type="reset" class="btn btn-danger">Reset</button>
-      <button type="button" id="reset-form-search" onclick="readData()" class="btn btn-warning">Reset Table</button>
-      </form>
     </div>
-  </div>
   </div>
 
   <script>
@@ -163,18 +158,22 @@
     let currentPage = 1
     var data = []
 
-    const readData = (params) => {
-      fetch(`http://localhost:3000/users?${new URLSearchParams(params).toString()}`)
-        .then((response) => response.json())
-        .then((data) => {
-          let html = ''
-          data.filter((row, index) => {
-            let start = (currentPage - 1) * pageSize
-            let end = currentPage * pageSize
 
-            if (index >= start && index < end) return true;
-          }).forEach((item, index) => {
-            html += `
+    const readData = (params) => {
+      $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/users",
+        dataType: "json",
+        data: params
+      }).done(function (data) {
+        let html = ''
+        data.filter((row, index) => {
+          let start = (currentPage - 1) * pageSize
+          let end = currentPage * pageSize
+
+          if (index >= start && index < end) return true;
+        }).forEach((item, index) => {
+          html += `
             <tr>
               <td>${item.id}</td>
               <td>${item.string}</td>
@@ -188,26 +187,30 @@
               </td>
             </tr>
             `
-          })
+        })
 
-          document.getElementById('body-users').innerHTML = html
+        $('#body-users').html(html)
 
-          function previousPage() {
-            if (currentPage > 1)
-              currentPage--;
-            readData()
-          }
-          function nextPage() {
-            if ((currentPage * pageSize) < data.length)
-              currentPage++;
-            readData()
-          }
+        function previousPage() {
+          if (currentPage > 1)
+            currentPage--;
+          readData()
+        }
+        function nextPage() {
+          if ((currentPage * pageSize) < data.length)
+            currentPage++;
+          readData()
+        }
 
-          document.querySelector('#prevButton').addEventListener('click', previousPage, false)
-          document.querySelector('#nextButton').addEventListener('click', nextPage, false)
+        document.querySelector('#prevButton').addEventListener('click', previousPage, false)
+        document.querySelector('#nextButton').addEventListener('click', nextPage, false)
 
-        });
+      }).fail(function (err) {
+        alert('Failed to read Jquery')
+      })
     }
+
+
     function sortTable(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
       table = document.getElementById("myTable");
@@ -244,6 +247,7 @@
         }
       }
     }
+
     function sortNumber(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
       table = document.getElementById("myTable");
@@ -281,107 +285,102 @@
       }
     }
 
-    function filter() {
-      var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("myInput");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("myTable");
-      tr = table.getElementsByTagName("tr");
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
-        }
-      }
-    }
 
-
-    document.getElementById('form-filters').addEventListener('submit', function (event) {
-      event.preventDefault()
-      // document.getElementById('id').value
-      // const id = document.getElementById('id').value
-      const string = document.getElementById('stringFilters').value
-      const integer = document.getElementById('integerFilters').value
-      const float = document.getElementById('floatFilters').value
-      const toDate = document.getElementById('toDateFilters').value
-      const startDate = document.getElementById('startDateFilters').value
-      const boolean = document.getElementById('booleanFilters').value
-      // readData({ string, integer, float, date, boolean })
-      readData({ string, integer, float, toDate, startDate, boolean })
-    })
 
 
 
 
     const saveData = (e) => {
       e.preventDefault()
-      document.getElementById('id').value
-      const id = document.getElementById('id').value
-      const string = document.getElementById('string').value
-      const integer = document.getElementById('integer').value
-      const float = document.getElementById('float').value
-      const date = document.getElementById('date').value
-      const boolean = document.getElementById('boolean').value
+      $('#id').val()
+      const id = $('#id').val()
+      const string = $('#string').val()
+      const integer = $('#integer').val()
+      const float = $('#float').val()
+      const date = $('#date').val()
+      const boolean = $('#boolean').val()
 
       if (idEdit == null) {
-        fetch('http://localhost:3000/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id, string, integer, float, date, boolean })
-        }).then((response) => response.json()).then((data) => {
+        $.ajax({
+          method: "POST",
+          url: `http://localhost:3000/users`,
+          dataType: "json",
+          data: { id, string, integer, float, date, boolean }
+        }).done(function (data) {
           readData()
+          $('#form-user').trigger("reset")
+
+        }).fail(function (err) {
+          alert('Failed to Add Data')
         })
       } else {
-        fetch(`http://localhost:3000/users/${idEdit}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id, string, integer, float, date, boolean })
-        }).then((response) => response.json()).then((data) => {
+        $.ajax({
+          method: "PUT",
+          url: `http://localhost:3000/users/${idEdit}`,
+          dataType: "json",
+          data: { id, string, integer, float, date, boolean }
+        }).done(function (data) {
           readData()
+          $('#form-user').trigger("reset")
+
+        }).fail(function (err) {
+          alert('Failed to Edit Data')
         })
         idEdit = null;
       }
-      document.getElementById('id').value = ''
-      document.getElementById('string').value = ''
-      document.getElementById('integer').value = ''
-      document.getElementById('float').value = ''
-      document.getElementById('date').value = ''
-      document.getElementById('boolean').value = ''
+      $('#id').val()
+      $('#string').val()
+      $('#integer').val()
+      $('#float').val()
+      $('#date').val()
+      $('#boolean').val()
       return false
     }
 
     const removeData = (id) => {
-      fetch(`http://localhost:3000/users/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => response.json()).then((data) => {
+      $.ajax({
+        method: "DELETE",
+        url: `http://localhost:3000/users/${id}`,
+        dataType: "json",
+      }).done(function (data) {
         readData()
+      }).fail(function (err) {
+        alert('Failed to Remove Data')
       })
     }
 
     const editData = (user) => {
       idEdit = user._id
-      document.getElementById('id').value = user.id
-      document.getElementById('string').value = user.string
-      document.getElementById('integer').value = user.integer
-      document.getElementById('float').value = user.float
-      document.getElementById('date').value = new Date(user.date)
-      document.getElementById('boolean').value = user.boolean
+      $('#id').val(user.id)
+      $('#string').val(user.string)
+      $('#integer').val(user.integer)
+      $('#float').val(user.float)
+      $('#date').val(user.date)
+      $('#boolean').val(user.boolean)
 
     }
 
-    readData()
+    $(document).ready(function () {
+      readData()
+
+      $('#form-filters').submit(function (event) {
+        event.preventDefault()
+        const string = $('#stringFilters').val()
+        const integer = $('#integerFilters').val()
+        const float = $('#floatFilters').val()
+        const date = $('#dateFilters').val()
+        const boolean = $('#booleanFilters').val()
+        readData({ string, integer, float, date, boolean })
+      })
+
+      $('#reset-form-search').click(function () {
+        readData()
+      })
+
+    })
+
+
+
   </script>
 
 

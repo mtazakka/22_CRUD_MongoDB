@@ -1,60 +1,74 @@
-const listItems = document.querySelectorAll('.list li');
-const prevButton = document.querySelector('.button-prev');
-const nextButton = document.querySelector('.button-next');
-let current_page = 1;
-let records_per_page = 10;
+router.get("/", async function (req, res, next) {
+  // const page = req.query.page || 1
+  // const previous = (parseInt(page) - 1) == 0 ? 1 : (parseInt(page) - 1)
+  // const nextPage = parseInt(page) + 1
+  // const limit = 5
+  // const offset = parseInt((page - 1) * limit)
+  // const url = req.url == '/' ? '/?page=1' : req.url
+  // var sortBy = req.query.sortBy == undefined ? "_id" : req.query.sortBy
+  // var order = req.query.order == undefined ? 1 : req.query.order
 
-function addEventListeners() {
-    prevButton.addEventListener('click', prevPage);
-    nextButton.addEventListener('click', nextPage);
-}
+  // var paramsSort = `{
+  //   "${sortBy}" : ${order}
+  // }`
+  // paramsSort = JSON.parse(paramsSort)
 
-function changePage(page) {
-    if (page < 1) {
-        page = 1;
+  if (req.query.string) {
+    var paramsString = {
+      string: { $regex: req.query.string, $options: "i" },
+    };
+  }
+  if (req.query.integer) {
+    var paramsInteger = {
+      integer: { $regex: req.query.integer, $options: "i" },
+    };
+  }
+  if (req.query.float) {
+    var paramsFloat = {
+      float: { $regex: req.query.float, $options: "i" },
+    };
+  }
+  if (req.query.date) {
+    if (req.query.startDate != "" && req.query.toDate != "") {
+      var paramsDate = {
+        date: {
+          $gte: new Date(req.query.startDate),
+          $lte: new Date(req.query.toDate),
+        },
+      };
+    } else if (req.query.startDate) {
+      var paramsStartDate = {
+        date: { $gte: new Date(req.query.startDate) },
+      };
+    } else {
+      var paramsToDate = {
+        date: { $lte: new Date(req.query.toDate) },
+      };
     }
-    if (page > (numPages() - 1)) {
-        page = numPages();
-    }
-    for (var i = (page - 1) * records_per_page; i < (page * records_per_page) && i < listItems.length; i++) {
-        listItems[i].setAttribute('data-page', page)
-    }
-    checkButtonAvailability()
-    showCurrentPage(page)
-}
-
-function showCurrentPage(page) {
-    Array.prototype.forEach.call(listItems, (item) => {
-        if (Number(item.getAttribute('data-page')) === page) {
-            item.style.display = 'block'
-        } else {
-            item.style.display = 'none'
-        }
-    })
-}
-
-function checkButtonAvailability() {
-    current_page == 1 ? prevButton.classList.add('hidden') : prevButton.classList.remove('hidden');
-    current_page == numPages() ? nextButton.classList.add('hidden') : nextButton.classList.remove('hidden');
-}
-
-function prevPage() {
-    if (current_page > 1) {
-        current_page--;
-        changePage(current_page);
-    }
-}
-
-function nextPage() {
-    if (current_page < numPages()) {
-        current_page++;
-        changePage(current_page);
-    }
-}
-
-function numPages() {
-    return Math.ceil(listItems.length / records_per_page);
-}
-
-changePage(1);
-addEventListeners();
+  }
+  if (req.query.boolean) {
+    var paramsBoolean = {
+      boolean: req.query.boolean,
+    };
+  }
+  try {
+    const finalParams = {
+      ...paramsString,
+      ...paramsInteger,
+      ...paramsFloat,
+      ...paramsDate,
+      ...paramsStartDate,
+      ...paramsToDate,
+      ...paramsBoolean,
+    };
+    // const finalParams = {};
+    const findResult = await collection.find(finalParams).toArray();
+    // const pages = Math.ceil(findResult.length / limit)
+    // const lastResult = await collection.find(finalParams).collation({ locale: "en" }).skip(offset).limit(limit)/*.sort(paramsSort)*/.toArray()
+    // console.log('result parameter',lastResult)
+    // const testResult = await collection.find({}).toArray()
+    res.status(200).json(findResult);
+  } catch (e) {
+    res.json(e);
+  }
+});
