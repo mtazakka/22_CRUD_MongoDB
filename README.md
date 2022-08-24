@@ -6,3 +6,4 @@
 19 Agustus, Vanilla CH 22
 21 Aug, Search  JQUERY
 23 Aug, road to Mid
+24 Aug, Done
