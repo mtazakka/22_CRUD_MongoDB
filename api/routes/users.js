@@ -1,12 +1,33 @@
 var express = require("express");
 var router = express.Router();
 const { ObjectId } = require("mongodb");
-// const moment = require("moment");
 
 module.exports = function (db) {
   const collection = db.collection("breads");
 
   router.get("/", async (req, res) => {
+    const page = req.query.page || "all";
+    // const previous = (parseInt(page) - 1) == 0 ? 1 : (parseInt(page) - 1)
+    // const n  extPage = parseInt(page) + 1
+    const limit = 2;
+    const offset = page == "all" ? 0 : parseInt((page - 1) * limit);
+    // const url = req.url == "/" ? "/?page=1" : req.url;
+    // var sortBy = req.query.sortBy == undefined ? "_id" : req.query.sortBy;
+    // var order = req.query.order == undefined ? 1 : req.query.order;
+
+    // var paramsSort = `{
+    //   "${sortBy}" : ${order}
+    // }`;
+    // paramsSort = JSON.parse(paramsSort);
+
+    var sortBy = req.query.sortBy == undefined ? "_id" : req.query.sortBy;
+    var order = req.query.order == undefined ? 1 : req.query.order;
+
+    var paramsSort = `{
+    "${sortBy}" : ${order}
+  }`;
+    paramsSort = JSON.parse(paramsSort);
+
     if (req.query.string) {
       var paramsString = {
         string: { $regex: req.query.string, $options: "i" },
@@ -55,18 +76,31 @@ module.exports = function (db) {
         ...paramsToDate,
         ...paramsBoolean,
       };
-
+      const findResult = await collection.find(finalParams).toArray();
+      const pages = Math.ceil(findResult.length / limit);
       const lastResult = await collection
         .find(finalParams)
         .collation({ locale: "en" })
+        .skip(offset)
+        .limit(limit) /*.sort(paramsSort)*/
         .toArray();
-
-      res.status(200).json(lastResult);
+      // console.log('result parameter',lastResult)
+      // const testResult = await collection.find({}).toArray()
+      res.status(200).json(findResult);
     } catch (e) {
-      console.log(e);
-      console.log("Failed to Read");
       res.json(e);
     }
+    //   const lastResult = await collection
+    //     .find(finalParams)
+    //     .collation({ locale: "en" })
+    //     .toArray();
+
+    //   res.status(200).json(lastResult);
+    // } catch (e) {
+    //   console.log(e);
+    //   console.log("Failed to Read");
+    //   res.json(e);
+    // }
   });
 
   router.post("/", async function (req, res, next) {
@@ -76,7 +110,7 @@ module.exports = function (db) {
         string: req.body.string,
         integer: req.body.integer,
         float: req.body.float,
-        // date: moment(new Date(req.body.date)).format("DD MMMM YYYY"),
+
         date: new Date(req.body.date),
         boolean: req.body.boolean,
       });
@@ -96,7 +130,6 @@ module.exports = function (db) {
             string: req.body.string,
             integer: req.body.integer,
             float: req.body.float,
-            // date: moment(new Date(req.body.date)).format("DD MMMM YYYY"),
             date: new Date(req.body.date),
             boolean: req.body.boolean,
           },

@@ -7,6 +7,36 @@ a {
   color: #00B7FF;
 }
 
-th {
+.table thead {
+  background-color: #f2f2f2;
+}
+.table tbody {
+  vertical-align:middle;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+
+.table-sortable th {
   cursor: pointer;
+}
+
+.table-sortable .th-sort-asc::after {
+  content: "\25b4";
+}
+
+.table-sortable .th-sort-desc::after {
+  content: "\25be";
+}
+
+.table-sortable .th-sort-asc::after,
+.table-sortable .th-sort-desc::after {
+  margin-left: 5px;
+}
+
+.table-sortable .th-sort-asc,
+.table-sortable .th-sort-desc {
+  background: rgba(0, 0, 0, 0.1);
 }

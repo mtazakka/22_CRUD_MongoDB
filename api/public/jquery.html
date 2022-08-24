@@ -6,6 +6,8 @@
     integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <script src="/jquery-3.6.0.min.js"></script>
+  <script src="/moment.min.js"></script>
+  <link href="/fontawesome/css/all.css" rel="stylesheet">
 </head>
 
 <body>
@@ -67,15 +69,15 @@
       </div>
 
       <hr>
-      <table class="table table-striped" id="myTable" style="text-align:center; vertical-align: middle;">
-        <thead>
+      <table class="table table-sortable" id="myTable" style="text-align:center">
+        <thead id="body-head">
           <tr>
-            <th onclick="sortNumber(0)">ID</th>
-            <th onclick="sortTable(1)">NAMA</th>
-            <th onclick="sortNumber(2)">USIA</th>
-            <th onclick="sortNumber(3)">TINGGI</th>
-            <th onclick="sortTable(4)">TANGGAL LAHIR</th>
-            <th onclick="sortTable(5)">LULUS</th>
+            <th> <a href="#" class="sort"></a> ID</th>
+            <th>NAMA</th>
+            <th>USIA</th>
+            <th>TINGGI</th>
+            <th>TANGGAL LAHIR</th>
+            <th>LULUS</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -154,7 +156,7 @@
 
   <script>
     let idEdit = null;
-    let pageSize = 10
+    let pageSize = 7
     let currentPage = 1
     var data = []
 
@@ -179,7 +181,7 @@
               <td>${item.string}</td>
               <td>${item.integer}</td>
               <td>${item.float}</td>
-              <td>${item.date}</td>
+                      <td>${moment(item.date).format("YYYY MMMM DD")}</td>
               <td>${item.boolean}</td>
               <td>
                 <button type="button" class="btn btn-success" onclick='editData(${JSON.stringify(item)})'>Edit</button>
@@ -210,84 +212,42 @@
       })
     }
 
+    function sortTableByColumn(table, column, asc = true) {
+      const dirModifier = asc ? 1 : -1;
+      const tBody = table.tBodies[0];
+      const rows = Array.from(tBody.querySelectorAll("tr"));
 
-    function sortTable(n) {
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.getElementById("myTable");
-      switching = true;
-      dir = "asc";
-      while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++) {
-          shouldSwitch = false;
-          x = rows[i].getElementsByTagName("TD")[n];
-          y = rows[i + 1].getElementsByTagName("TD")[n];
-          if (dir == "asc") {
-            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-              shouldSwitch = true;
-              break;
-            }
-          } else if (dir == "desc") {
-            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-              shouldSwitch = true;
-              break;
-            }
-          }
-        }
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount++;
-        } else {
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
-          }
-        }
+      // Sort each row
+      const sortedRows = rows.sort((a, b) => {
+        const aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+        const bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+
+        return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+      });
+
+      // Remove all existing TRs from the table
+      while (tBody.firstChild) {
+        tBody.removeChild(tBody.firstChild);
       }
+
+      // Re-add the newly sorted rows
+      tBody.append(...sortedRows);
+
+      // Remember how the column is currently sorted
+      table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+      table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
+      table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
     }
 
-    function sortNumber(n) {
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.getElementById("myTable");
-      switching = true;
-      dir = "asc";
-      while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++) {
-          shouldSwitch = false;
-          x = rows[i].getElementsByTagName("TD")[n];
-          y = rows[i + 1].getElementsByTagName("TD")[n];
-          if (dir == "asc") {
-            if (Number(x.innerHTML) > Number(y.innerHTML)) {
-              shouldSwitch = true;
-              break;
-            }
-          } else if (dir == "desc") {
-            if (Number(x.innerHTML) < Number(y.innerHTML)) {
-              shouldSwitch = true;
-              break;
-            }
-          }
-        }
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount++;
-        } else {
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
-          }
-        }
-      }
-    }
+    document.querySelectorAll(".table-sortable th").forEach(headerCell => {
+      headerCell.addEventListener("click", () => {
+        const tableElement = headerCell.parentElement.parentElement.parentElement;
+        const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+        const currentIsAscending = headerCell.classList.contains("th-sort-asc");
 
-
-
-
+        sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+      });
+    });
 
 
     const saveData = (e) => {
